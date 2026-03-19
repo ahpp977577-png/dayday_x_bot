@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DayDay 管理後台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 p-10">
+    <div id="login" class="max-w-sm mx-auto bg-white p-8 rounded shadow">
+        <h2 class="text-xl font-bold mb-4">管理員登入</h2>
+        <input id="pw" type="password" placeholder="輸入 admin 登入" class="border p-2 w-full mb-4">
+        <button onclick="login()" class="bg-blue-500 text-white w-full py-2 rounded">登入</button>
+    </div>
+
+    <div id="admin" class="hidden max-w-sm mx-auto bg-white p-8 rounded shadow">
+        <h2 class="text-xl font-bold mb-4">更新打卡數據</h2>
+        <div class="mb-4">
+            <label>休假人數：</label>
+            <input id="vac" type="number" class="border p-2 w-full">
+        </div>
+        <div class="mb-4">
+            <label>遲到人數：</label>
+            <input id="lat" type="number" class="border p-2 w-full">
+        </div>
+        <button id="save" onclick="update()" class="bg-green-500 text-white w-full py-2 rounded">同步到機器人</button>
+    </div>
+
+    <script>
+        function login() {
+            if(document.getElementById('pw').value === 'admin') {
+                document.getElementById('login').classList.add('hidden');
+                document.getElementById('admin').classList.remove('hidden');
+            }
+        }
+        async function update() {
+            const btn = document.getElementById('save');
+            btn.innerText = "處理中...";
+            await fetch('/api/update', {
+                method: 'POST',
+                body: JSON.stringify({
+                    vacation: document.getElementById('vac').value,
+                    late: document.getElementById('lat').value
+                })
+            });
+            alert("同步成功！");
+            btn.innerText = "同步到機器人";
+        }
+    </script>
+</body>
+</html>
