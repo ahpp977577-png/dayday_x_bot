@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>企业内部考勤管理系统</title>
     <style>
-        /* 直接把 style.css 的内容粘贴在这里 */
         :root { --primary-color: #2563eb; --success-color: #10b981; --warning-color: #f59e0b; --danger-color: #ef4444; --bg-light: #f8fafc; --sidebar-bg: #1e293b; --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
         * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body { margin: 0; background: var(--bg-light); color: #334155; }
@@ -20,15 +19,14 @@
         .content { flex: 1; padding: 2rem; overflow-y: auto; }
         .card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; }
         .form-group { margin-bottom: 1rem; }
-        input, select, textarea { width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px; }
-        button { cursor: pointer; border: none; padding: 0.7rem 1.2rem; border-radius: 6px; transition: 0.2s; }
-        .btn-primary { background: var(--primary-color); color: white; width: 100%; }
-        .btn-success { background: var(--success-color); color: white; }
+        input { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 6px; margin-top: 5px; font-size: 1rem; }
+        button { cursor: pointer; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; transition: 0.2s; font-weight: bold; }
+        .btn-primary { background: var(--primary-color); color: white; width: 100%; margin-top: 10px; }
+        .btn-success { background: var(--success-color); color: white; margin-right: 10px; }
         .btn-warning { background: var(--warning-color); color: white; }
         .btn-text { background: transparent; color: #94a3b8; margin-top: auto; }
         .time-display { font-size: 2.5rem; font-weight: bold; color: var(--primary-color); margin: 1rem 0; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: 1rem; border-bottom: 1px solid #f1f5f9; }
+        .input-label { display: block; margin-top: 15px; font-weight: bold; color: #64748b; }
     </style>
 </head>
 <body>
@@ -38,77 +36,45 @@
             <h2>系统登录</h2>
             <div class="form-group">
                 <label>账号</label>
-                <input type="text" id="username" placeholder="admin 或 user">
+                <input type="text" id="username" placeholder="请输入：测试员">
             </div>
             <div class="form-group">
                 <label>密码</label>
                 <input type="password" id="password" value="123456">
             </div>
-            <button onclick="handleLogin()" class="btn-primary">登录</button>
+            <button id="login-btn" class="btn-primary">登录</button>
         </div>
     </div>
 
     <div id="main-app" class="hidden">
         <aside class="sidebar">
             <div class="logo">考勤管理</div>
-            <nav id="nav-menu"></nav>
-            <button onclick="logout()" class="btn-text">退出登录</button>
+            <nav id="nav-menu">
+                <a href="#">今日打卡</a>
+            </nav>
+            <button onclick="location.reload()" class="btn-text">退出登录</button>
         </aside>
         <main class="content">
-            <section id="check-in-section" class="page">
-                <h3>今日考勤</h3>
+            <section id="check-in-section">
+                <h3>今日考勤数据上报</h3>
                 <div class="card">
                     <div class="time-display" id="current-time">00:00:00</div>
-                    <div id="today-status">状态：未打卡</div>
-                    <div style="margin-top:20px">
-                        <button onclick="punchIn('上班')" class="btn-success">上班打卡</button>
-                        <button onclick="punchIn('下班')" class="btn-warning">下班打卡</button>
+                    
+                    <label class="input-label">今日请假人数</label>
+                    <input type="number" id="vacation-input" placeholder="请输入数字" value="0">
+                    
+                    <label class="input-label">今日迟到人数</label>
+                    <input type="number" id="late-input" placeholder="请输入数字" value="0">
+
+                    <div style="margin-top:30px">
+                        <button id="work-in-btn" class="btn-success">上班打卡并同步</button>
+                        <button id="work-out-btn" class="btn-warning">下班打卡并同步</button>
                     </div>
                 </div>
-            </section>
-            <section id="history-section" class="page hidden">
-                <h3>打卡历史记录</h3>
-                <div class="card"><table id="hist-table"><thead><tr><th>日期</th><th>时间</th><th>类型</th></tr></thead><tbody></tbody></table></div>
             </section>
         </main>
     </div>
 
-    <script>
-        // 简单的逻辑控制
-        function handleLogin() {
-            const user = document.getElementById('username').value;
-            if(user === 'admin' || user === 'user') {
-                document.getElementById('login-page').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                renderMenu(user);
-            } else {
-                alert('请输入 admin 或 user');
-            }
-        }
-
-        function renderMenu(role) {
-            const nav = document.getElementById('nav-menu');
-            nav.innerHTML = `<a onclick="showPage('check-in')">今日打卡</a>
-                             <a onclick="showPage('history')">历史记录</a>`;
-        }
-
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            document.getElementById(id + '-section').classList.remove('hidden');
-        }
-
-        function punchIn(type) {
-            alert(type + '打卡成功！');
-            const tbody = document.querySelector('#hist-table tbody');
-            tbody.innerHTML += `<tr><td>${new Date().toLocaleDateString()}</td><td>${new Date().toLocaleTimeString()}</td><td>${type}</td></tr>`;
-        }
-
-        function logout() { location.reload(); }
-        
-        setInterval(() => {
-            const clock = document.getElementById('current-time');
-            if(clock) clock.innerText = new Date().toLocaleTimeString();
-        }, 1000);
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
