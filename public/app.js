@@ -1,64 +1,31 @@
-// --- 1. 登录逻辑 ---
+// --- 优化后的登录逻辑 ---
 document.getElementById('login-btn')?.addEventListener('click', () => {
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
+    const userInput = document.getElementById('username').value;
+    const passInput = document.getElementById('password').value;
 
-    // 匹配“测试员”账号
-    if ((user === 'admin' && pass === '123456') || 
-        (user === 'user' && pass === '123456') || 
-        (user === '测试员' && pass === '123456')) {
-        alert('登录成功！');
-        // 修正 ID 匹配 index.html 里的结构
+    // 账号数据库：可以在这里添加无限个账号
+    const userRegistry = {
+        'admin': { pass: '123456', role: '系统管理员' },
+        'user01': { pass: '123456', role: '正式员工' },
+        'user02': { pass: '123456', role: '正式员工' },
+        '测试员': { pass: '123456', role: '系统测试员' }
+    };
+
+    const matchedUser = userRegistry[userInput];
+
+    if (matchedUser && matchedUser.pass === passInput) {
+        alert(`登录成功！欢迎，${matchedUser.role}`);
+        
+        // 保存当前角色到全局，以便打卡时使用
+        window.currentUser = { name: userInput, role: matchedUser.role };
+        
         document.getElementById('login-page').classList.add('hidden');
         document.getElementById('main-app').classList.remove('hidden');
+        
+        // 在界面上显示当前登录人
+        const display = document.getElementById('user-role-display');
+        if (display) display.textContent = `当前操作人：${userInput} (${matchedUser.role})`;
     } else {
-        alert('账号错误！请输入：测试员');
+        alert('账号或密码错误！请检查输入。');
     }
 });
-
-// --- 2. 核心打卡逻辑 (发送实时数据) ---
-async function handleAttendance(type) {
-    const vacationInput = document.getElementById('vacation-input');
-    const lateInput = document.getElementById('late-input');
-    
-    const vacationCount = vacationInput ? parseInt(vacationInput.value) || 0 : 0;
-    const lateCount = lateInput ? parseInt(lateInput.value) || 0 : 0;
-
-    try {
-        const response = await fetch('/api/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                vacation: vacationCount,
-                late: lateCount
-            })
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            alert(`✅ ${type}成功！机器人消息已同步。`);
-        } else {
-            console.error('API 报错:', result);
-            alert('❌ 同步失败：' + (result.error || '后端未响应'));
-        }
-    } catch (error) {
-        console.error('连接失败:', error);
-        alert('🌐 无法连接到服务器，请检查 Vercel 部署。');
-    }
-}
-
-// 绑定按钮
-document.getElementById('work-in-btn')?.addEventListener('click', () => handleAttendance('上班打卡'));
-document.getElementById('work-out-btn')?.addEventListener('click', () => handleAttendance('下班打卡'));
-
-// --- 3. 动态时间更新 ---
-setInterval(() => {
-    const timeElement = document.getElementById('current-time');
-    if (timeElement) {
-        const now = new Date();
-        timeElement.textContent = now.getHours().toString().padStart(2, '0') + ':' + 
-                                 now.getMinutes().toString().padStart(2, '0') + ':' + 
-                                 now.getSeconds().toString().padStart(2, '0');
-    }
-}, 1000);
