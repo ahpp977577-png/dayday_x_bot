@@ -6,39 +6,102 @@
     <title>企业考勤管理系统</title>
     <style>
         :root { --sidebar-bg: #1e293b; --main-bg: #f1f5f9; --accent: #2563eb; --admin-color: #7c3aed; --user-color: #059669; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--main-bg); display: flex; height: 100vh; overflow: hidden; }
+        body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--main-bg); display: flex; height: 100vh; overflow: hidden; }
         .hidden { display: none !important; }
 
-        /* 登录页样式 (维持原本) */
+        /* 登录页面 */
         #login-page { width: 100%; display: flex; justify-content: center; align-items: center; background: var(--sidebar-bg); position: fixed; inset: 0; z-index: 1000; }
         .login-card { background: white; padding: 40px; border-radius: 12px; width: 320px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
         .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
         #login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        /* 后台布局样式 (还原原本) */
-        .sidebar { width: 240px; background: var(--sidebar-bg); color: white; padding: 20px; display: flex; flex-direction: column; }
-        .content { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; }
-        .main-card { background: white; width: 100%; max-width: 650px; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
+        /* 后台主布局 */
+        .sidebar { width: 240px; background: var(--sidebar-bg); color: white; padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .content { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow-y: auto; }
         
-        .time-box { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin: 20px 0; }
-        .role-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; }
+        /* 居中的白色卡片 */
+        .main-card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); text-align: center; }
         
-        /* 权限专区样式 (嵌入下拉菜单的优化) */
+        .time-box { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin: 15px 0; }
+        .role-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; background: #f1f5f9; }
+        
+        /* 分区样式 */
         .admin-section { background: #f5f3ff; border: 1px solid #ddd6fe; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left; }
         .user-section { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 12px; }
         
-        /* 核心：确保下拉菜单样式匹配 input 样式 */
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 0.85rem; color: #4b5563; margin-bottom: 5px; font-weight: 600; }
-        /* 这里的 input, select 都用同一个样式 */
-        .input-group input, .input-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; background: white; }
+        
+        /* 核心修复：防止 Select 溢出 */
+        .input-group select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
 
         .btn-row { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .logout-link { margin-top: auto; color: #94a3b8; cursor: pointer; font-size: 0.9rem; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="login-page">
-        <div class="login
+        <div class="login-card">
+            <h2 style="margin-top:0; color:#1e293b">系统登录</h2>
+            <input type="text" id="username" placeholder="请输入账号">
+            <input type="password" id="password" placeholder="请输入密码">
+            <button id="login-btn">登录</button>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden" style="display: flex; width: 100%;">
+        <div class="sidebar">
+            <h2 style="font-size: 1.2rem;">考勤管理系统</h2>
+            <div style="padding:10px; background:rgba(255,255,255,0.1); border-radius:6px">🏠 首页上报</div>
+            <div class="logout-link" onclick="location.reload()">退出登录</div>
+        </div>
+        
+        <div class="content">
+            <div class="main-card">
+                <div id="role-tag" class="role-tag">--</div>
+                <h3 id="welcome-msg" style="margin: 0; color: #1e293b;">欢迎</h3>
+                <div class="time-box" id="current-time">00:00:00</div>
+
+                <div id="admin-area" class="admin-section hidden">
+                    <h4 style="margin-top:0; color: var(--admin-color)">🛡️ 管理员代点 (指定员工)</h4>
+                    <div class="input-group">
+                        <label>选择受影响员工</label>
+                        <select id="target-employee-select"></select>
+                    </div>
+                    <div class="input-group">
+                        <label>假别类型</label>
+                        <select id="leave-type-select">
+                            <option value="事假">事假</option>
+                            <option value="病假">病假</option>
+                            <option value="产假">产假</option>
+                            <option value="休假">休假</option>
+                        </select>
+                    </div>
+                    <button id="admin-sync-btn" class="btn" style="background: var(--admin-color); width: 100%;">确认代点并同步机器人</button>
+                </div>
+
+                <div class="user-section">
+                    <h4 style="margin-top:0; color: var(--user-color)">⏱️ 个人实时打卡</h4>
+                    <div class="btn-row">
+                        <button id="work-in-btn" class="btn" style="background:#10b981">☀️ 上班签到</button>
+                        <button id="work-out-btn" class="btn" style="background:#f59e0b">🌙 下班签退</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
