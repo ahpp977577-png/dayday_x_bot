@@ -5,7 +5,19 @@ export default async function handler(req, res) {
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    // 根据不同类型构建不同的消息文本
+    // --- 核心修复：强制获取东八区北京/台北时间 ---
+    const now = new Date();
+    const chinaTime = now.toLocaleString('zh-CN', { 
+        timeZone: 'Asia/Shanghai', // 强制指定时区
+        hour12: false,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
     let text = `📢 *考勤系统回报*\n-------------------\n👤 操作人: ${operator} (${role})\n标签: #${type}\n`;
 
     if (type === '管理数据上报') {
@@ -14,7 +26,7 @@ export default async function handler(req, res) {
         text += `⏰ 动作: *${type}*\n📍 状态: 已实时记录\n`;
     }
 
-    text += `-------------------\n📅 时间: ${new Date().toLocaleString('zh-CN')}`;
+    text += `-------------------\n📅 汇报时间: ${chinaTime}`;
 
     try {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
