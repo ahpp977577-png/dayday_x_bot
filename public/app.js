@@ -1,8 +1,8 @@
 // --- 1. 用户配置 ---
 const userRegistry = {
     'admin': { role: '管理层', isAdmin: true },
-    '张三': { role: '正式员工', isAdmin: false },
-    '李四': { role: '正式员工', isAdmin: false },
+    '黄于短': { role: '正式员工', isAdmin: false },
+    '郑地瓜': { role: '正式员工', isAdmin: false },
     '测试员': { role: '系统测试', isAdmin: false }
 };
 
