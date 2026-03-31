@@ -3,44 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>考勤管理系统</title>
-    <link rel="stylesheet" href="style.css">
+    <title>考勤管理后台</title>
+    <style>
+        :root { --sidebar-bg: #1e293b; --main-bg: #f1f5f9; --accent: #2563eb; --card-bg: #ffffff; }
+        body { margin: 0; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--main-bg); display: flex; height: 100vh; overflow: hidden; }
+        .hidden { display: none !important; }
+
+        /* 登录页样式 */
+        #login-page { width: 100%; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+        .login-card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 360px; text-align: center; }
+        .login-card h2 { margin-bottom: 24px; color: #1e293b; }
+        .login-card input { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        #login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        #login-btn:hover { background: #1d4ed8; }
+
+        /* 后台布局样式 */
+        #main-app { display: flex; width: 100%; height: 100%; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: #f8fafc; display: flex; flex-direction: column; padding: 24px; }
+        .sidebar h2 { font-size: 1.25rem; margin-bottom: 32px; border-bottom: 1px solid #334155; padding-bottom: 16px; }
+        .nav-item { padding: 12px 16px; border-radius: 8px; background: rgba(255,255,255,0.05); margin-bottom: 8px; color: #cbd5e1; font-size: 0.95rem; }
+        .nav-item.active { background: var(--accent); color: white; }
+        .logout-btn { margin-top: auto; color: #94a3b8; cursor: pointer; font-size: 0.9rem; text-align: center; padding: 10px; border: 1px solid #334155; border-radius: 8px; }
+
+        .content { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .stats-card { background: var(--card-bg); width: 100%; max-width: 700px; padding: 32px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .stats-card h3 { margin: 0 0 8px 0; color: #1e293b; }
+        #user-role-display { color: #64748b; font-size: 0.9rem; margin-bottom: 24px; }
+
+        .time-box { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin: 24px 0; letter-spacing: -1px; }
+        
+        .input-row { display: flex; gap: 20px; margin-bottom: 24px; text-align: left; }
+        .input-group { flex: 1; }
+        .input-group label { display: block; font-size: 0.85rem; color: #475569; margin-bottom: 6px; font-weight: 600; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 1.1rem; }
+
+        .btn-row { display: flex; gap: 16px; }
+        .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; font-size: 1rem; }
+        .btn-in { background: #10b981; }
+        .btn-in:hover { background: #059669; }
+        .btn-out { background: #f59e0b; }
+        .btn-out:hover { background: #d97706; }
+    </style>
 </head>
 <body>
-    <div id="login-page" class="container">
-        <div class="card">
-            <h2>系统登录</h2>
-            <input type="text" id="username" placeholder="账号 (admin/user/测试员)">
-            <input type="password" id="password" placeholder="密码">
-            <button id="login-btn">登录</button>
+
+    <div id="login-page">
+        <div class="login-card">
+            <h2>管理后台</h2>
+            <input type="text" id="username" placeholder="请输入账号">
+            <input type="password" id="password" placeholder="密码 (默认 123456)">
+            <button id="login-btn">立 即 登 录</button>
         </div>
     </div>
-
-    <div id="main-app" class="container hidden">
-        <div class="card">
-            <h3>今日考勤数据上报</h3>
-            <p id="user-role-display" style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;"></p>
-            
-            <div id="current-time" style="font-size: 2.5rem; font-weight: bold; color: #2563eb; margin-bottom: 20px;">00:00:00</div>
-            
-            <div class="input-group">
-                <label>今日请假人数</label>
-                <input type="number" id="vacation-input" value="0" min="0">
-            </div>
-            
-            <div class="input-group">
-                <label>今日迟到人数</label>
-                <input type="number" id="late-input" value="0" min="0">
-            </div>
-
-            <div class="button-group">
-                <button id="work-in-btn" class="btn-green">上班打卡并同步</button>
-                <button id="work-out-btn" class="btn-orange">下班打卡并同步</button>
-            </div>
-        </div>
-        <button id="logout-btn" style="margin-top: 20px; background: none; color: #64748b; border: none; cursor: pointer;">退出登录</button>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
