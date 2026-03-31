@@ -3,77 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>企业内部考勤管理系统</title>
-    <style>
-        :root { --primary-color: #2563eb; --success-color: #10b981; --warning-color: #f59e0b; --danger-color: #ef4444; --bg-light: #f8fafc; --sidebar-bg: #1e293b; --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-        body { margin: 0; background: var(--bg-light); color: #334155; }
-        .hidden { display: none !important; }
-        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .auth-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--card-shadow); width: 100%; max-width: 400px; }
-        #main-app { display: flex; min-height: 100vh; }
-        .sidebar { width: 240px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 1.5rem; }
-        .logo { font-size: 1.5rem; font-weight: bold; margin-bottom: 2rem; color: #60a5fa; }
-        .sidebar nav a { display: block; color: #94a3b8; text-decoration: none; padding: 0.8rem 1rem; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer; }
-        .sidebar nav a:hover { background: rgba(255,255,255,0.1); }
-        .content { flex: 1; padding: 2rem; overflow-y: auto; }
-        .card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; }
-        .form-group { margin-bottom: 1rem; }
-        input { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 6px; margin-top: 5px; font-size: 1rem; }
-        button { cursor: pointer; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; transition: 0.2s; font-weight: bold; }
-        .btn-primary { background: var(--primary-color); color: white; width: 100%; margin-top: 10px; }
-        .btn-success { background: var(--success-color); color: white; margin-right: 10px; }
-        .btn-warning { background: var(--warning-color); color: white; }
-        .btn-text { background: transparent; color: #94a3b8; margin-top: auto; }
-        .time-display { font-size: 2.5rem; font-weight: bold; color: var(--primary-color); margin: 1rem 0; }
-        .input-label { display: block; margin-top: 15px; font-weight: bold; color: #64748b; }
-    </style>
+    <title>考勤管理系统</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div id="login-page" class="auth-container">
-        <div class="auth-card">
+    <div id="login-page" class="container">
+        <div class="card">
             <h2>系统登录</h2>
-            <div class="form-group">
-                <label>账号</label>
-                <input type="text" id="username" placeholder="请输入：测试员">
-            </div>
-            <div class="form-group">
-                <label>密码</label>
-                <input type="password" id="password" value="123456">
-            </div>
-            <button id="login-btn" class="btn-primary">登录</button>
+            <input type="text" id="username" placeholder="账号 (admin/user/测试员)">
+            <input type="password" id="password" placeholder="密码">
+            <button id="login-btn">登录</button>
         </div>
     </div>
 
-    <div id="main-app" class="hidden">
-        <aside class="sidebar">
-            <div class="logo">考勤管理</div>
-            <nav id="nav-menu">
-                <a href="#">今日打卡</a>
-            </nav>
-            <button onclick="location.reload()" class="btn-text">退出登录</button>
-        </aside>
-        <main class="content">
-            <section id="check-in-section">
-                <h3>今日考勤数据上报</h3>
-                <p id="user-role-display" style="color: #64748b; font-size: 0.9rem; margin-top: -10px; margin-bottom: 20px;"></p>
-                <div class="card">
-                    <div class="time-display" id="current-time">00:00:00</div>
-                    
-                    <label class="input-label">今日请假人数</label>
-                    <input type="number" id="vacation-input" placeholder="请输入数字" value="0">
-                    
-                    <label class="input-label">今日迟到人数</label>
-                    <input type="number" id="late-input" placeholder="请输入数字" value="0">
+    <div id="main-app" class="container hidden">
+        <div class="card">
+            <h3>今日考勤数据上报</h3>
+            <p id="user-role-display" style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;"></p>
+            
+            <div id="current-time" style="font-size: 2.5rem; font-weight: bold; color: #2563eb; margin-bottom: 20px;">00:00:00</div>
+            
+            <div class="input-group">
+                <label>今日请假人数</label>
+                <input type="number" id="vacation-input" value="0" min="0">
+            </div>
+            
+            <div class="input-group">
+                <label>今日迟到人数</label>
+                <input type="number" id="late-input" value="0" min="0">
+            </div>
 
-                    <div style="margin-top:30px">
-                        <button id="work-in-btn" class="btn-success">上班打卡并同步</button>
-                        <button id="work-out-btn" class="btn-warning">下班打卡并同步</button>
-                    </div>
-                </div>
-            </section>
-        </main>
+            <div class="button-group">
+                <button id="work-in-btn" class="btn-green">上班打卡并同步</button>
+                <button id="work-out-btn" class="btn-orange">下班打卡并同步</button>
+            </div>
+        </div>
+        <button id="logout-btn" style="margin-top: 20px; background: none; color: #64748b; border: none; cursor: pointer;">退出登录</button>
     </div>
 
     <script src="app.js"></script>
