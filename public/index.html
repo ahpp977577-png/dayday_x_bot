@@ -1,20 +1,44 @@
-<div id="admin-area" class="admin-section hidden">
-    <h4 style="margin-top:0; color: #7c3aed">🛡️ 管理员代点假 (指定员工)</h4>
-    
-    <div class="input-group">
-        <label>选择员工</label>
-        <select id="target-employee" style="width:100%; padding:10px; border-radius:6px; border:1px solid #cbd5e1;"></select>
-    </div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业考勤管理系统</title>
+    <style>
+        :root { --sidebar-bg: #1e293b; --main-bg: #f1f5f9; --accent: #2563eb; --admin-color: #7c3aed; --user-color: #059669; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--main-bg); display: flex; height: 100vh; overflow: hidden; }
+        .hidden { display: none !important; }
 
-    <div class="input-group">
-        <label>假期类型</label>
-        <select id="leave-type" style="width:100%; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
-            <option value="事假">事假</option>
-            <option value="病假">病假</option>
-            <option value="产假">产假</option>
-            <option value="年假">年假</option>
-        </select>
-    </div>
+        /* 登录页样式 (维持原本) */
+        #login-page { width: 100%; display: flex; justify-content: center; align-items: center; background: var(--sidebar-bg); position: fixed; inset: 0; z-index: 1000; }
+        .login-card { background: white; padding: 40px; border-radius: 12px; width: 320px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
+        .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        #login-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-    <button id="admin-sync-btn" class="btn" style="background: #7c3aed; width: 100%;">确认代点并同步机器人</button>
-</div>
+        /* 后台布局样式 (还原原本) */
+        .sidebar { width: 240px; background: var(--sidebar-bg); color: white; padding: 20px; display: flex; flex-direction: column; }
+        .content { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; }
+        .main-card { background: white; width: 100%; max-width: 650px; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
+        
+        .time-box { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin: 20px 0; }
+        .role-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; }
+        
+        /* 权限专区样式 (嵌入下拉菜单的优化) */
+        .admin-section { background: #f5f3ff; border: 1px solid #ddd6fe; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left; }
+        .user-section { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 12px; }
+        
+        /* 核心：确保下拉菜单样式匹配 input 样式 */
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.85rem; color: #4b5563; margin-bottom: 5px; font-weight: 600; }
+        /* 这里的 input, select 都用同一个样式 */
+        .input-group input, .input-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; background: white; }
+
+        .btn-row { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .logout-link { margin-top: auto; color: #94a3b8; cursor: pointer; font-size: 0.9rem; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div id="login-page">
+        <div class="login
