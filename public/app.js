@@ -1,8 +1,8 @@
 const userRegistry = {
     'admin': { role: '管理层', isAdmin: true },
-    '黄于短': { role: '正式员工', isAdmin: false },
-    '郑瓜瓜': { role: '正式员工', isAdmin: false },
-    '涂逼逼': { role: '正式员工', isAdmin: false }
+    '彦瓜瓜': { role: '正式员工', isAdmin: false },
+    '芙瓜瓜': { role: '正式员工', isAdmin: false },
+    '媛瓜瓜': { role: '正式员工', isAdmin: false }
 };
 
 document.getElementById('login-btn').onclick = () => {
